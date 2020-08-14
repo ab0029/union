@@ -2,7 +2,11 @@
 
 namespace Young\Union;
 
-class Config
+use Countable;
+use ArrayAccess;
+use IteratorAggregate;
+
+class Config implements ArrayAccess, IteratorAggregate, Countable
 {
     use Traits\HasDataTrait;
 
