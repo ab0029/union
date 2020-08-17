@@ -43,7 +43,7 @@ class Gateway extends Request
     protected function resolveParameter() 
     {
         $data = [
-            'verson' => property_exists($this, 'verson') ? $this->v : $this->app->getApiDefaultVersion(),
+            'verson' => property_exists($this, 'verson') ? $this->version : $this->app->getApiDefaultVersion(),
             'type' => $this->api_type,
             'date_type' => 'JSON',
             'timestamp' => (string) time(),

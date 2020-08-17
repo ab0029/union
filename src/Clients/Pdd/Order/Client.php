@@ -21,7 +21,7 @@ class Client extends Gateway
         if (!isset($params['start_update_time'])) {
             $params['start_update_time'] = strtotime(date('Y-m-d 00:00:00'));
         }
-        if (!isset($params['start_update_time'])) {
+        if (!isset($params['end_update_time'])) {
             $params['end_update_time'] = time();
         }
 

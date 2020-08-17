@@ -1,12 +1,12 @@
 <?php
 
-namespace Young\Union\Clients\Jd;
+namespace Young\Union\Clients\Suning;
 
 use Young\Union\Clients\ServiceContainer;
 
 /**
- * 京东客户端
- * https://union.jd.com/openplatform/api
+ * 舒宁客户端
+ * https://open.suning.com/ospos/apipage/toApiMethodDetailMenuNew.do?bustypeId=3
  */
 class Application extends ServiceContainer
 {
@@ -16,6 +16,6 @@ class Application extends ServiceContainer
 
     public function getApiDefaultVersion()
     {
-        return $this->config->get('version', '1.0');
+        return $this->config->get('version', 'v1.2');
     }
 }

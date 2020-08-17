@@ -88,7 +88,7 @@ trait LogTrait
     public static function getLogFormat()
     {
         $template = self::$logFormat
-            ?: '"{method} {uri} HTTP/{version}" {code} {cost} {req_body} {res_body}';
+            ?: '"{method} {uri} HTTP/{version}" {code} {req_body} {res_body}';
 
         return str_replace(
             ['{pid}', '{cost}', '{start_time}'],

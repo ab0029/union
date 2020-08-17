@@ -42,7 +42,7 @@ class Gateway extends Request
 
     protected function resolveParameter() 
     {
-        $this->options['query']['v'] = property_exists($this, 'v') ? $this->v : $this->app->getApiDefaultVersion();
+        $this->options['query']['v'] = property_exists($this, 'verson') ? $this->verson : $this->app->getApiDefaultVersion();
         $this->options['query']['method'] = $this->api_method;
         $this->options['query']['app_key'] = $this->app->config->get('app_key');
         $this->options['query']['sign_method'] = 'md5';

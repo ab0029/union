@@ -4,6 +4,10 @@ namespace Young\Union\Clients\Pdd;
 
 use Young\Union\Clients\ServiceContainer;
 
+/**
+ * 拼多多客户端
+ * https://open.pinduoduo.com/application/document/api?id=pdd.ddk.cms.prom.url.generate
+ */
 class Application extends ServiceContainer
 {
     protected $providers = [
