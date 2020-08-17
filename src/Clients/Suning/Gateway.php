@@ -58,7 +58,7 @@ class Gateway extends Request
         $this->options['headers']['Format'] = 'json';
         $this->options['headers']['signInfo'] = $sign;
         $this->options['headers']['AppKey'] = $this->app->config->get('app_key');
-        $this->options['headers']['VersionNo'] = property_exists($this, 'verson') ? $this->verson : $this->app->getApiDefaultVersion();
+        $this->options['headers']['VersionNo'] = property_exists($this, 'version') ? $this->version : $this->app->getApiDefaultVersion();
         $this->options['headers']['Sdk-Version'] = 'suning-sdk-php-beta0.1';
         $this->options['headers']['Content-Type'] = 'text/json; charset=utf-8';
         if ( $access_token = $this->app->config->get('access_token', '') ) {
@@ -80,7 +80,7 @@ class Gateway extends Request
             'method' => $this->api_method,
             'date' => date('Y-m-d H:i:s'),
             'app_key' => $this->app->config->get('app_key'),
-            'api_version' => property_exists($this, 'verson') ? $this->verson : $this->app->getApiDefaultVersion(),
+            'api_version' => property_exists($this, 'version') ? $this->version : $this->app->getApiDefaultVersion(),
             'post_field' => base64_encode($this->api_params)
         ];
 

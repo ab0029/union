@@ -73,3 +73,13 @@ function value($value)
 {
     return $value instanceof Closure ? $value() : $value;
 }
+
+/**
+ * @param string $salt
+ *
+ * @return string
+ */
+function uuid($salt)
+{
+    return md5($salt . uniqid(md5(microtime(true)), true)) . microtime();
+}
