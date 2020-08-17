@@ -44,9 +44,8 @@ abstract class Request implements ArrayAccess
 
     public $data = [];
 
-    /**
-     * @var array
-     */
+    private $http_client;
+
     private static $client_config = [];
 
     private $responseResolver;
@@ -159,11 +158,22 @@ abstract class Request implements ArrayAccess
     {
         $this->resolveOption();
 
-        return self::createClient($this)->requestAsync(
+        return $this->getHttpClient()->requestAsync(
             $this->method,
             (string)$this->uri,
             $this->options
         );
+    }
+
+    /**
+     * 获取HTTP客户端
+     * 不要一直调用self::createClient去走请求，耗时多
+     */
+    public function getHttpClient()
+    {
+        return $this->http_client 
+                    ? $this->http_client
+                    : $this->http_client = self::createClient($this);
     }
 
     /**
@@ -207,7 +217,7 @@ abstract class Request implements ArrayAccess
     private function response()
     {
         try {
-            return self::createClient($this)->request(
+            return $this->getHttpClient()->request(
                 $this->method,
                 (string)$this->uri,
                 $this->options
