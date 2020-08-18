@@ -11,7 +11,8 @@ use Young\Union\Clients\ServiceContainer;
 class Application extends ServiceContainer
 {
     protected $providers = [
-        Order\ServiceProvider::class
+        Common\ServiceProvider::class,
+        Order\ServiceProvider::class,
     ];
 
     public function getApiDefaultVersion()

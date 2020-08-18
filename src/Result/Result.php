@@ -8,6 +8,7 @@ use ArrayAccess;
 use IteratorAggregate;
 use InvalidArgumentException;
 use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Young\Union\Request\Request;
 use Young\Union\Traits\HasDataTrait;
@@ -22,6 +23,13 @@ class Result extends Response implements ArrayAccess, IteratorAggregate, Countab
      * @var Request
      */
     protected $request;
+
+    /**
+     * psr Request
+     * 
+     * @var RequestInterface
+     */
+    protected $psrRequest;
 
     /**
      * Result constructor.
@@ -121,6 +129,17 @@ class Result extends Response implements ArrayAccess, IteratorAggregate, Countab
     public function getRequest()
     {
         return $this->request;
+    }
+
+    public function setPsrRequest(RequestInterface $psrRequest)
+    {
+        $this->psrRequest = $psrRequest;
+        return $this;
+    }
+
+    public function getPsrRequest()
+    {
+        return $this->psrRequest;
     }
 
     /**

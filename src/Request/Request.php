@@ -12,6 +12,7 @@ use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Young\Union\Application;
 use Young\Union\Encode;
@@ -201,9 +202,17 @@ abstract class Request implements ArrayAccess
             ));
         }
 
-        $stack->push(Middleware::mapResponse(static function (ResponseInterface $response) use ($request) {
-            return $request->getResult($response);
+        $stack->push(Middleware::mapRequest(static function (RequestInterface $psrRequest) use ($request) {
+            return new PsrRequest($psrRequest, $request->options);
         }));
+
+        $stack->push(static function(callable $handler) use ($request) {
+            return function(RequestInterface $psrRequest, array $options) use ($handler, $request) {
+                return $handler($psrRequest, $options)->then(function($response) use ($request, $psrRequest) {
+                    return $request->getResult($response)->setPsrRequest($psrRequest);
+                });
+            };
+        });
 
         self::$client_config['handler'] = $stack;
 
