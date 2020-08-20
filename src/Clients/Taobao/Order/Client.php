@@ -3,6 +3,8 @@
 namespace Young\Union\Clients\Taobao\Order;
 
 use Young\Union\Clients\Taobao\Gateway;
+use Young\Union\Exceptions\ClientException;
+use Young\Union\SDK;
 
 class Client extends Gateway
 {
@@ -20,19 +22,22 @@ class Client extends Gateway
      * page_no Number  false   1   第几页，默认1，1~100
      * order_scene Number  false   1   场景订单场景类型，1:常规订单，2:渠道订单，3:会员运营订单，默认为1
      */
-    public function list(array $params, $requestAsync = false)
+    public function list(array $params = [], $requestAsync = false)
     {
         if (!isset($params['page'])) {
             $params['page'] = 1;
         }
-        if (!isset($params['page_size'])) {
-            $params['page_size'] = 100;
-        }
+
         if (!isset($params['start_time'])) {
-            $params['start_time'] = date('Y-m-d 00:00:00');
+            throw new ClientException('start_time required', SDK::INVALID_ARGUMENT);
         }
+
         if (!isset($params['end_time'])) {
-            $params['end_time'] = date('Y-m-d H:i:s');
+            throw new ClientException('end_time required', SDK::INVALID_ARGUMENT);
+        }
+
+        if ($params['page'] > 1 && !isset($params['position_index'])) {
+            throw new ClientException('position_index required when page > 1', SDK::INVALID_ARGUMENT);
         }
 
         return $this->send('taobao.tbk.order.details.get', $params, $requestAsync);

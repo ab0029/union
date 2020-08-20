@@ -49,7 +49,9 @@ class Gateway extends Request
             'format' => 'json',
             'sign_method' => 'md5',
             'timestamp' => \date("Y-m-d H:i:s"),
-            'session' => $this->app->config->get('session', ''),
+            'session' => $this['session'] ?? $this->app->config->get('session', ''),
+            'target_app_key' => $this->app->config->get('target_app_key', ''),
+            'partner_id' => $this->app->config->get('partner_id', ''),
         ];
         $this->options['query'] = $data;
         $this->options['query']['sign'] = $this->signature();

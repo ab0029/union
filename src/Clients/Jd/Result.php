@@ -7,6 +7,8 @@ use Young\Union\Result\Result as BaseResult;
 
 class Result extends BaseResult
 {
+    private $isSuccess = true;
+
     protected function resolveData()
     {
         $content = $this->getBody()->getContents();
@@ -22,7 +24,13 @@ class Result extends BaseResult
             $result_data['result'] = json_decode($result_data['result'], true);
         }
 
-        $this->dot($result_data);
+        if ( $result_data['code'] != 0 || (isset($result_data['result']['code']) && $result_data['result']['code'] != 200) ) {
+            $this->dot($result_data);
+            $this->isSuccess = false;
+            return;
+        }
+
+        $this->dot($result_data['result']);
     }
 
     /**
@@ -30,7 +38,7 @@ class Result extends BaseResult
      */
     public function isSuccess()
     {
-        return $this->isStatusSuccess() && !$this->isEmpty() && $this['code'] == 0 && $this['result.code'] == 200;
+        return $this->isStatusSuccess() && !$this->isEmpty() && $this->isSuccess;
     }
 
     public function getErrorMessage()
@@ -45,6 +53,6 @@ class Result extends BaseResult
 
     public function getRequestId()
     {
-        return $this['result.requestId'];
+        return $this['result.requestId'] ?? $this['requestId'];
     }
 }

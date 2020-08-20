@@ -3,6 +3,8 @@
 namespace Young\Union\Clients\Suning\Order;
 
 use Young\Union\Clients\Suning\Gateway;
+use Young\Union\Exceptions\ClientException;
+use Young\Union\SDK;
 
 class Client extends Gateway
 {
@@ -18,19 +20,22 @@ class Client extends Gateway
      * pid String  N   qqwwee112233    工具商pid
      * orderChannel    String  N   14905   订单渠道号
      */
-    public function list(array $params, $requestAsync = false)
+    public function list(array $params = [], $requestAsync = false)
     {
         if (!isset($params['pageNo'])) {
             $params['pageNo'] = 1;
         }
+
         if (!isset($params['pageSize'])) {
-            $params['pageSize'] = 50;
+            throw new ClientException('pageSize required', SDK::INVALID_ARGUMENT);
         }
+
         if (!isset($params['startTime'])) {
-            $params['startTime'] = date('Y-m-d 00:00:00');
+            throw new ClientException('startTime required', SDK::INVALID_ARGUMENT);
         }
+
         if (!isset($params['endTime'])) {
-            $params['endTime'] = date('Y-m-d H:i:s');
+            throw new ClientException('endTime required', SDK::INVALID_ARGUMENT);
         }
 
         $data = [

@@ -49,7 +49,7 @@ class Gateway extends Request
         $this->options['query']['format'] = $this->format;
         $this->options['query']['timestamp'] = date('Y-m-d H:i:s', time());
         $this->options['query']['param_json'] = $this->param_json;
-        if ( $access_token = $this->app->config->get('access_token', '') ) {
+        if ( $access_token = $this['access_token'] ?? $this->app->config->get('access_token', '') ) {
             $this->options['query']['access_token'] = $access_token;
         }
         $this->options['query']['sign'] = $this->signature();

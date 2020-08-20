@@ -30,11 +30,6 @@ class SDK
     const SERVER_UNREACHABLE = 'SDK.ServerUnreachable';
 
     /**
-     * Invalid RegionId
-     */
-    const INVALID_REGION_ID = 'SDK.InvalidRegionId';
-
-    /**
      * Invalid Argument
      */
     const INVALID_ARGUMENT = 'SDK.InvalidArgument';

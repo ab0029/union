@@ -3,6 +3,8 @@
 namespace Young\Union\Clients\Vip\Order;
 
 use Young\Union\Clients\Vip\Gateway;
+use Young\Union\Exceptions\ClientException;
+use Young\Union\SDK;
 
 class Client extends Gateway
 {
@@ -23,13 +25,10 @@ class Client extends Gateway
      * vendorCode  String  否           vendorCode,工具商方式下会传入
      * chanTag String  否           渠道标识，即推广位PID
      */
-    public function list(array $params, $requestAsync = false)
+    public function list(array $params = [], $requestAsync = false)
     {
         if (!isset($params['page'])) {
             $params['page'] = 1;
-        }
-        if (!isset($params['pageSize'])) {
-            $params['pageSize'] = 100;
         }
         if (!isset($params['requestId']) ) {
             $params['requestId'] = \Young\Union\uuid('vip');

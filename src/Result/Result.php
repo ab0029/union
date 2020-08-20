@@ -142,6 +142,11 @@ class Result extends Response implements ArrayAccess, IteratorAggregate, Countab
         return $this->psrRequest;
     }
 
+    public function raw()
+    {
+        return $this->__toString();
+    }
+
     /**
      * @codeCoverageIgnore
      * @return Response

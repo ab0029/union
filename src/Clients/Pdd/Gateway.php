@@ -25,10 +25,10 @@ class Gateway extends Request
         });
     }
 
-    protected function send(string $type, array $params = [], $requestAsync = false)
+    protected function send(string $method, array $params = [], $requestAsync = false)
     {
         $this->options['query'] = [];
-        $this->api_type = $type;
+        $this->api_method = $method;
         $this->api_params = $params;
         return $requestAsync ? $this->requestAsync()
                              : $this->request();
@@ -44,13 +44,13 @@ class Gateway extends Request
     {
         $data = [
             'version' => property_exists($this, 'version') ? $this->version : $this->app->getApiDefaultVersion(),
-            'type' => $this->api_type,
+            'type' => $this->api_method,
             'date_type' => 'JSON',
             'timestamp' => (string) time(),
             'client_id' => $this->app->config->get('client_id'),
         ];
         $this->options['query'] = array_merge((array) $this->api_params, $data);
-        if ( $access_token = $this->app->config->get('access_token', '') ) {
+        if ( $access_token = $this['access_token'] ?? $this->app->config->get('access_token', '') ) {
             $this->options['query']['access_token'] = $access_token;
         }
         $this->options['query']['sign'] = $this->signature();

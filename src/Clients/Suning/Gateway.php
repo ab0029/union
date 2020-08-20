@@ -61,7 +61,7 @@ class Gateway extends Request
         $this->options['headers']['VersionNo'] = property_exists($this, 'version') ? $this->version : $this->app->getApiDefaultVersion();
         $this->options['headers']['Sdk-Version'] = 'suning-sdk-php-beta0.1';
         $this->options['headers']['Content-Type'] = 'text/json; charset=utf-8';
-        if ( $access_token = $this->app->config->get('access_token', '') ) {
+        if ( $access_token = $this['access_token'] ?? $this->app->config->get('access_token', '') ) {
             $this->options['headers']['access_token'] = $access_token;
         }
         $this->options['body'] = $this->api_params;

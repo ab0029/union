@@ -4,6 +4,8 @@ namespace Young\Union\Clients\Jd\Order;
 
 use Young\Union\Clients\Jd\Gateway;
 use Young\Union\Clients\Jd\Result;
+use Young\Union\Exceptions\ClientException;
+use Young\Union\SDK;
 use GuzzleHttp\Promise\PromiseInterface;
 
 class Client extends Gateway
@@ -13,37 +15,25 @@ class Client extends Gateway
     /**
      * 获取订单
      * 支持参数
-     * pageNo
-     * 页码，返回第几页结果
-     *
-     * pageSize
-     * 每页包含条数，上限为500
-     *
-     * type
-     * 订单时间查询类型(1：下单时间，2：完成时间，3：更新时间)
-     *
-     * time
-     * 查询时间，建议使用分钟级查询，格式：yyyyMMddHH、yyyyMMddHHmm或yyyyMMddHHmmss，如201811031212 的查询范围从12:12:00--12:12:59
-     *
-     * childUnionId
-     * 子站长ID（需要联系运营开通PID账户权限才能拿到数据），childUnionId和key不能同时传入
-     *
-     * key
-     * 其他推客的授权key，查询工具商订单需要填写此项，childUnionid和key不能同时传入
+     * pageNo   int 是   1   页码，返回第几页结果
+     * pageSize int 是   20  每页包含条数，上限为500
+     * type     int 是   1   订单时间查询类型(1：下单时间，2：完成时间，3：更新时间)
+     * time     String  是   201811031212 查询时间，建议使用分钟级查询，格式：yyyyMMddHH、yyyyMMddHHmm或yyyyMMddHHmmss，如201811031212 的查询范围从12:12:00--12:12:59
+     * childUnionId    long    否   61800001    子站长ID（需要联系运营开通PID账户权限才能拿到数据），childUnionId和key不能同时传入
+     * key String  否   无   其他推客的授权key，查询工具商订单需要填写此项，childUnionid和key不能同时传入
      */
-    public function list(array $params, $requestAsync = false)
+    public function list(array $params = [], $requestAsync = false)
     {
         if (!isset($params['pageNo'])) {
             $params['pageNo'] = 1;
         }
-        if (!isset($params['pageSize'])) {
-            $params['pageSize'] = 100;
-        }
+
         if (!isset($params['type'])) {
-            $params['type'] = 1;
+            throw new ClientException('type required', SDK::INVALID_ARGUMENT);
         }
+
         if (!isset($params['time'])) {
-            $params['time'] = date('YmdH');
+            throw new ClientException('time required', SDK::INVALID_ARGUMENT);
         }
 
         return $this->send('jd.union.open.order.query', [
@@ -82,10 +72,17 @@ class Client extends Gateway
         return $responses;
     }
 
-    public function nextListAsync(Result $response, int $deepPage = 1, bool $mergePreReponse = false) : PromiseInterface
+    /**
+     * 从订单列表响应获取下一页数据
+     * @param  Result       $response        list获取的响应
+     * @param  int|integer  $deepPage        向下第几页
+     * @param  bool|boolean $mergePreReponse 向下页查询时是否返回合并数据
+     * @return PromiseInterface $obj         Promise对象
+     */
+    public function nextListAsync(Result $response, int $deepPage = 1, bool $mergePreReponse = false)
     {
         // 检查下页还有无数据
-        if ( $response['result.hasMore'] ) {
+        if ( $response['hasMore'] ) {
             $psrRequest = $response->getPsrRequest();
             $param_json = json_decode($psrRequest['query.param_json'], true);
             $query = $param_json['orderReq'];
@@ -98,8 +95,8 @@ class Client extends Gateway
             return $this->list($query, true)->then(function($nextResponse) use ($response, $deepPage, $mergePreReponse) {
                 if ( $mergePreReponse ) {
                     // 合并上一次请求的数据
-                    $data = array_merge($response['result.data'] ?? [], $nextResponse['result.data'] ?? []);
-                    $nextResponse->set('result.data', $data);
+                    $data = array_merge($response['data'] ?? [], $nextResponse['data'] ?? []);
+                    $nextResponse->set('data', $data);
                 }
                 return $this->nextListAsync($nextResponse, $deepPage, $mergePreReponse);
             });
