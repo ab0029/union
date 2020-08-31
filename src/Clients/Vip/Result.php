@@ -7,6 +7,8 @@ use Young\Union\Result\Result as BaseResult;
 
 class Result extends BaseResult
 {
+    private $isSuccess = true;
+
     protected function resolveData()
     {
         $content = $this->getBody()->getContents();
@@ -17,9 +19,15 @@ class Result extends BaseResult
             $result_data = [];
         }
 
-        if ( isset($result_data['success']) ) {
+        if ( $result_data['returnCode'] != 0 ) {
+            $this->dot($result_data);
+            $this->isSuccess = false;
+            return;
+        }
+
+        if ( isset($result_data['result']) ) {
             // 响应成功
-            $result_data = $result_data['success'];
+            $result_data = $result_data['result'];
         }
 
         $this->dot($result_data);
@@ -30,7 +38,7 @@ class Result extends BaseResult
      */
     public function isSuccess()
     {
-        return $this->isStatusSuccess() && !$this->isEmpty() && !isset($this['returnCode']);
+        return $this->isStatusSuccess() && !$this->isEmpty() && $this->isSuccess;
     }
 
     public function getErrorMessage()
