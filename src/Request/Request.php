@@ -18,6 +18,7 @@ use Young\Union\Application;
 use Young\Union\Encode;
 use Young\Union\Result\Result;
 use Young\Union\Exceptions\ServerException;
+use Young\Union\Exceptions\ClientException;
 use Young\Union\Traits\ArrayAccessTrait;
 use Young\Union\Traits\ObjectAccessTrait;
 
