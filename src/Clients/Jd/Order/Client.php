@@ -46,9 +46,9 @@ class Client extends Gateway
      * @param  string $date 日期
      * @return array        24小时集合数，自动处理下一个分页
      */
-    public function dayList($date, int $deepPage = 5)
+    public function dayList($date, $type = 1, int $deepPage = 5)
     {
-        $dates = is_array($date) ? $date : func_get_args();
+        $dates = is_array($date) ? $date : [$date];
 
         $dates = array_unique(array_map(function($date){
             return date('Ymd', strtotime($date));
@@ -59,7 +59,8 @@ class Client extends Gateway
             for( $i = 0; $i < 24; $i++) {
                 $params = [
                     'pageSize' => 500,
-                    'time' => $time . str_pad((string) $i, 2, "0", STR_PAD_LEFT)
+                    'time' => $time . str_pad((string) $i, 2, "0", STR_PAD_LEFT),
+                    'type' => in_array((string) $type, [1, 2, 3]) ? $type : 1,
                 ];
                 $promises[] = $this->list($params, true)->then(function($response) use ($deepPage) {
                     return $this->nextListAsync($response, $deepPage, true);
