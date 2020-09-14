@@ -16,6 +16,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Young\Union\Application;
 use Young\Union\Encode;
+use Young\Union\SDK;
 use Young\Union\Result\Result;
 use Young\Union\Exceptions\ServerException;
 use Young\Union\Exceptions\ClientException;
