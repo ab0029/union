@@ -7,6 +7,7 @@ use Young\Union\Clients\Jd\Result;
 use Young\Union\Exceptions\ClientException;
 use Young\Union\SDK;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Exception\GuzzleException;
 
 class Client extends Gateway
 {
@@ -64,6 +65,12 @@ class Client extends Gateway
                 ];
                 $promises[] = $this->list($params, true)->then(function($response) use ($deepPage) {
                     return $this->nextListAsync($response, $deepPage, true);
+                }, function(GuzzleException $exception) {
+                    return new ClientException(
+                        $exception->getMessage(),
+                        SDK::SERVER_UNREACHABLE,
+                        $exception
+                    );
                 });
             }
         }
