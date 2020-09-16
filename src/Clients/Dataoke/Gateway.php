@@ -41,7 +41,20 @@ class Gateway extends Request
     protected function resolveHost() 
     {
         $this->method = $this->api_method;
-        $this->setUri(self::GATEWAY_URL . '/' . trim($this->api_path, '/'));
+        if ( $this->isValidUrl($this->api_path) ) {
+            $this->setUri($this->api_path);
+        } else {
+            $this->setUri(self::GATEWAY_URL . '/' . trim($this->api_path, '/'));
+        }
+    }
+
+    protected function isValidUrl($path)
+    {
+        if (! preg_match('~^(//|https?://)~', $path)) {
+            return filter_var($path, FILTER_VALIDATE_URL) !== false;
+        }
+
+        return true;
     }
 
     protected function resolveParameter() 

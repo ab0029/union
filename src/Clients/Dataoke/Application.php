@@ -13,5 +13,6 @@ class Application extends ServiceContainer
     protected $providers = [
         Common\ServiceProvider::class,
         Order\ServiceProvider::class,
+        Goods\ServiceProvider::class,
     ];
 }
