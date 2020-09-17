@@ -5,11 +5,11 @@ namespace Young\Union\Request;
 use Countable;
 use ArrayAccess;
 use IteratorAggregate;
-use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Request as GuzzleHttpPsrRequest;
 use Psr\Http\Message\RequestInterface;
 use Young\Union\Traits\HasDataTrait;
 
-class PsrRequest extends Request implements ArrayAccess, IteratorAggregate, Countable
+class PsrRequest extends GuzzleHttpPsrRequest implements ArrayAccess, IteratorAggregate, Countable
 {
     use HasDataTrait;
 
