@@ -33,10 +33,6 @@ class Result extends BaseResult
             return;
         }
 
-        if ( isset($result_data['data']) && is_array($result_data['data']) ) {
-            $result_data = $result_data['data'];
-        }
-
         $this->dot($result_data);
     }
 
