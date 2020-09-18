@@ -117,7 +117,7 @@ class Client extends Gateway
         $num = $params['num'] ?? 20;
 
         $promise = $this->recommend($params, true)->then(function($result) use ($num) {
-            $data = $result['goodsIdList'] ?? [];
+            $data = $result['data.goodsIdList'] ?? [];
             $ids = $data ? array_rand($data, min(count($data), $num)) : [];
             if ( $ids ) {
                 $goodsIds = [];
