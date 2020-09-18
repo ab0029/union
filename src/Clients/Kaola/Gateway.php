@@ -1,6 +1,6 @@
 <?php
 
-namespace Young\Union\Clients\Pdd;
+namespace Young\Union\Clients\Kaola;
 
 use Pimple\Container;
 use Young\Union\Request\Request;
@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class Gateway extends Request
 {
-    const GATEWAY_URL = 'https://gw-api.pinduoduo.com/api/router';
+    const GATEWAY_URL = 'https://cps.kaola.com/zhuanke/api';
 
     protected $app;
 
@@ -43,17 +43,16 @@ class Gateway extends Request
     protected function resolveParameter() 
     {
         $data = [
-            'version' => property_exists($this, 'version') ? $this->version : $this->app->getApiDefaultVersion(),
-            'type' => $this->api_method,
-            'date_type' => 'JSON',
-            'timestamp' => (string) time(),
-            'client_id' => $this->app->config->get('client_id', $this->app->config->get('app_key')),
+            'timestamp' => date('Y-m-d H:i:s'),
+            'v' => property_exists($this, 'version') ? $this->version : $this->app->getApiDefaultVersion(),
+            'signMethod' => 'md5',
+            'unionId' => $this->app->config->get('app_key'),
+            'method' => $this->api_method,
         ];
         $this->options['query'] = array_merge((array) $this->api_params, $data);
-        if ( $access_token = $this['access_token'] ?? $this->app->config->get('access_token', '') ) {
-            $this->options['query']['access_token'] = $access_token;
-        }
         $this->options['query']['sign'] = $this->signature();
+        $this->options['headers']['Content-Type'] = 'text/json; charset=utf-8';
+        $this->options['headers']['Accept'] = 'application/json; charset=utf-8';
     }
 
     /**
@@ -64,16 +63,11 @@ class Gateway extends Request
     {
         $parameter = $this->options['query'];
         ksort($parameter);
-        $str = $client_secret = $this->app->config->get('client_secret', $this->app->config->get('app_secret'));
+        $str = $app_secret = $this->app->config->get('app_secret');
         foreach ($parameter as $key => $value) {
-            if ( is_array($value) ) {
-                $value = json_encode($value);
-            } elseif ( is_bool($value) ) {
-                $value = $value ? 'true' : 'false';
-            }
             $str .= "$key$value";
         }
-        $str = $str . $client_secret;
+        $str = $str . $app_secret;
 
         $signature = strtoupper(md5($str));
 
