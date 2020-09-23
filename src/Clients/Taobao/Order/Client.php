@@ -24,8 +24,8 @@ class Client extends Gateway
      */
     public function list(array $params = [], $requestAsync = false)
     {
-        if (!isset($params['page'])) {
-            $params['page'] = 1;
+        if (!isset($params['page_no'])) {
+            $params['page_no'] = 1;
         }
 
         if (!isset($params['start_time'])) {
@@ -36,8 +36,8 @@ class Client extends Gateway
             throw new ClientException('end_time required', SDK::INVALID_ARGUMENT);
         }
 
-        if ($params['page'] > 1 && !isset($params['position_index'])) {
-            throw new ClientException('position_index required when page > 1', SDK::INVALID_ARGUMENT);
+        if ($params['page_no'] > 1 && !isset($params['position_index'])) {
+            throw new ClientException('position_index required when page_no > 1', SDK::INVALID_ARGUMENT);
         }
 
         return $this->send('taobao.tbk.order.details.get', $params, $requestAsync);
