@@ -29,7 +29,14 @@ class Gateway extends Request
     {
         $this->options['query'] = [];
         $this->api_method = $method;
-        $this->api_params = $params;
+        $this->api_params = array_map(function($value) {
+            if ( is_array($value) ) {
+                $value = json_encode($value);
+            } elseif ( is_bool($value) ) {
+                $value = $value ? 'true' : 'false';
+            }
+            return $value;
+        }, $params);
         return $requestAsync ? $this->requestAsync()
                              : $this->request();
     }
