@@ -65,7 +65,7 @@ class Client extends Gateway
      * 商品详情
      * goodsCode    String  Y   70055337    商品ID
      */
-    public function detail(array $params = [], $requestAsync = false)
+    public function detail2(array $params = [], $requestAsync = false)
     {
         if ( !isset($params['goodsCode']) ) {
             throw new ClientException('goodsCode required', SDK::INVALID_ARGUMENT);
@@ -73,6 +73,25 @@ class Client extends Gateway
 
         return $this->send('suning.netalliance.unioninfomation.get', [
             'getUnionInfomation' => $params
+        ], $requestAsync);
+    }
+
+    /**
+     * 商品详情，含券，但是需要商品ID+店铺ID
+     * cityCode String  N   025 城市编码 默认为025
+     * commodityStr    String  Y   10586599073-0000000000_10586596940-0070067633   格式 商品编码1-供应商编码1_商品编码2-供应商编码2... 商品编码取有效位，供应商编码左补零至10位 最大查询10个商品
+     * picWidth    String  N   200 图片宽度 默认为200
+     * picHeight   String  N   200 图片高度 默认为200
+     * couponMark  String  N   1   1表示拿到券后价，不传按照以前逻辑取不到券后价
+     */
+    public function detail(array $params = [], $requestAsync = false)
+    {
+        if ( !isset($params['commodityStr']) ) {
+            throw new ClientException('commodityStr required', SDK::INVALID_ARGUMENT);
+        }
+
+        return $this->send('suning.netalliance.commoditydetail.query', [
+            'queryCommoditydetail' => $params
         ], $requestAsync);
     }
 
