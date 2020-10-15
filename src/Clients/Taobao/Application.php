@@ -16,6 +16,7 @@ class Application extends ServiceContainer
         Order\ServiceProvider::class,
         Goods\ServiceProvider::class,
         Tool\ServiceProvider::class,
+        OAuth\ServiceProvider::class,
     ];
 
     public function getApiDefaultVersion()

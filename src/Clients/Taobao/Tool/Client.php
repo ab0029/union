@@ -90,4 +90,75 @@ class Client extends Gateway
 
         return $this->send('taobao.tbk.item.click.extract', $params, $requestAsync);
     }
+
+    /**
+     * 淘宝客-公用-私域用户邀请码生成
+     * relation_id  Number  false   11  渠道关系ID
+     * relation_app    String  true    common  渠道推广的物料类型
+     * code_type   Number  true    1   邀请码类型，1 - 渠道邀请，2 - 渠道裂变，3 -会员邀请
+     */
+    public function scInvitecodeGet(array $params = [], $requestAsync = false)
+    {
+        if (!isset($params['relation_app'])) {
+            throw new ClientException('relation_app required', SDK::INVALID_ARGUMENT);
+        }
+
+        if (!isset($params['code_type'])) {
+            throw new ClientException('code_type required', SDK::INVALID_ARGUMENT);
+        }
+
+        $this->checkSessionOrThrow();
+
+        return $this->send('taobao.tbk.sc.invitecode.get', $params, $requestAsync);
+    }
+
+    /**
+     * 淘宝客-公用-私域用户备案
+     * relation_from    String  false   1   渠道备案 - 来源，取链接的来源
+     * offline_scene   String  false   1   渠道备案 - 线下场景信息，1 - 门店，2- 学校，3 - 工厂，4 - 其他
+     * online_scene    String  false   1   渠道备案 - 线上场景信息，1 - 微信群，2- QQ群，3 - 其他
+     * inviter_code    String  true    xxx 淘宝客邀请渠道或会员的邀请码
+     * info_type   Number  true    1   类型，必选 默认为1:
+     * note    String  false   小蜜蜂 媒体侧渠道备注
+     * register_info   String  false   {"phoneNumber":"18801088599","city":"江苏省","province":"南京市","location":"玄武区花园小区","detailAddress":"5号楼3单元101室","shopType":"社区店","shopName":"全家便利店","shopCertifyType":"营业执照","certifyNumber":"111100299001"}   线下备案注册信息,字段包含: 电话号码(phoneNumber，必填),省(province,必填),市(city,必填),区县街道(location,必填),详细地址(detailAddress,必填),经营类型(career,线下个人必填),店铺类型(shopType,线下店铺必填),店铺名称(shopName,线下店铺必填),店铺证书类型(shopCertifyType,线下店铺选填),店铺证书编号(certifyNumber,线下店铺选填)
+     */
+    public function scPublisherInfoSave(array $params = [], $requestAsync = false)
+    {
+        if (!isset($params['inviter_code'])) {
+            throw new ClientException('inviter_code required', SDK::INVALID_ARGUMENT);
+        }
+
+        if (!isset($params['info_type'])) {
+            throw new ClientException('info_type required', SDK::INVALID_ARGUMENT);
+        }
+
+        $this->checkSessionOrThrow();
+
+        return $this->send('taobao.tbk.sc.publisher.info.save', $params, $requestAsync);
+    }
+
+    /**
+     * 淘宝客-公用-私域用户备案信息查询
+     * info_type    Number  true    1   类型，必选 1:渠道信息；2:会员信息
+     * relation_id Number  false   2323    渠道独占 - 渠道关系ID
+     * page_no Number  false   1   第几页
+     * page_size   Number  false   10  每页大小
+     * relation_app    String  true    common  备案的场景：common（通用备案），etao（一淘备案），minietao（一淘小程序备案），offlineShop（线下门店备案），offlinePerson（线下个人备案）。如不填默认common。查询会员信息只需填写common即可
+     * special_id  String  false   1212    会员独占 - 会员运营ID
+     * external_id String  false   12345   淘宝客外部用户标记，如自身系统账户ID；微信ID等
+     */
+    public function scPublisherInfoGet(array $params = [], $requestAsync = false)
+    {
+        if (!isset($params['info_type'])) {
+            throw new ClientException('info_type required', SDK::INVALID_ARGUMENT);
+        }
+
+        if (!isset($params['relation_app'])) {
+            throw new ClientException('relation_app required', SDK::INVALID_ARGUMENT);
+        }
+
+        $this->checkSessionOrThrow();
+
+        return $this->send('taobao.tbk.sc.publisher.info.get', $params, $requestAsync);
+    }
 }

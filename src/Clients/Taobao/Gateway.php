@@ -5,6 +5,8 @@ namespace Young\Union\Clients\Taobao;
 use Pimple\Container;
 use Young\Union\Request\Request;
 use Psr\Http\Message\ResponseInterface;
+use Young\Union\Exceptions\ClientException;
+use Young\Union\SDK;
 
 class Gateway extends Request
 {
@@ -77,5 +79,18 @@ class Gateway extends Request
         $signature = strtoupper(md5($str));
 
         return $signature;
+    }
+
+    public function setSession($session)
+    {
+        $this['session'] = $session;
+        return $this;
+    }
+
+    public function checkSessionOrThrow()
+    {
+        if(!isset($this['session']) && !$this->app->config->has('session') ) {
+            throw new ClientException('session required', SDK::INVALID_ARGUMENT);
+        }
     }
 }
