@@ -86,4 +86,17 @@ class Gateway extends Request
 
         return $signature;
     }
+
+    public function setAccessToken($access_token)
+    {
+        $this['access_token'] = $access_token;
+        return $this;
+    }
+
+    public function checkAccessTokenOrThrow()
+    {
+        if(!isset($this['access_token']) && !$this->app->config->has('access_token') ) {
+            throw new ClientException('access_token required', SDK::INVALID_ARGUMENT);
+        }
+    }
 }
